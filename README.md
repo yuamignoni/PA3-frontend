@@ -1,8 +1,6 @@
 # Passo a passo para rodar o projeto
 
 
-## Comandos:
-
 ### Baixando o projeto na máquina
 
 - 1.Crie uma pasta para armazenar o projeto.&nbsp;
