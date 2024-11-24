@@ -3,30 +3,30 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import * as C from "./styles";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import api from "../../services/api"
 
 const Signin = () => {
-  const { signin } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [password, setpassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = () => {
-    if (!email | !senha) {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
       setError("Preencha todos os campos");
       return;
     }
 
-    const res = signin(email, senha);
-
-    if (res) {
-      setError(res);
-      return;
+    try {
+      const response = await api.post("auth/login", { email, password });
+      localStorage.setItem("token", response.data.token);
+      navigate("/Home");
+    } catch (error) {
+      setError("Erro ao fazer login: Verifique suas credenciais.");
     }
 
-    navigate("/home");
   };
 
   return (
@@ -41,9 +41,9 @@ const Signin = () => {
         />
         <Input
           type="password"
-          placeholder="Digite sua Senha"
-          value={senha}
-          onChange={(e) => [setSenha(e.target.value), setError("")]}
+          placeholder="Digite sua password"
+          value={password}
+          onChange={(e) => [setpassword(e.target.value), setError("")]}
         />
         <C.labelError>{error}</C.labelError>
         <Button Text="Entrar" onClick={handleLogin} />
